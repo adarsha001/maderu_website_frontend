@@ -299,6 +299,22 @@ function Footer({ setPage }: { setPage: (p: Page) => void }) {
 function HomePage({ setPage }: { setPage: (p: Page) => void }) {
   const go = (p: Page) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
+  // ── Navigate to specific product on products page ──────────────────────────
+  const goToProduct = (categoryId: string, productId: string) => {
+    setPage("products");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Use setTimeout to ensure the products page is rendered before updating URL
+    setTimeout(() => {
+      const params = new URLSearchParams();
+      params.set('category', categoryId);
+      params.set('product', productId);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({}, '', newUrl);
+      // Dispatch a custom event to notify the ProductsPage
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }, 100);
+  };
+
   const sectors = [
     { icon: Car, title: "Automotive", desc: "Precision stampings for body-in-white, chassis, and powertrain systems meeting IATF 16949 standards.", photo: PHOTOS.engine },
     { icon: Plane, title: "Aerospace", desc: "Close-tolerance structural components and assemblies for aircraft and ground support equipment.", photo: PHOTOS.aerospace },
@@ -306,155 +322,144 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
     { icon: Zap, title: "Electrical & Electronics", desc: "Copper & steel press parts, contacts, and assemblies for switchgear and distribution boards.", photo: PHOTOS.switchgear },
   ];
 
-return (
+  // Get featured products (first 2 from each category)
+  const featuredProducts = CATEGORY_DATA.flatMap(cat => 
+    cat.products.slice(0, 2).map(p => ({ ...p, category: cat.name, categoryId: cat.id }))
+  ).slice(0, 8);
+
+  return (
     <>
- <section 
-  className="relative overflow-hidden" 
-  style={{ backgroundColor: NAVY }}
->
-  {/* Background Image - Optimized for mobile */}
-  <div className="absolute inset-0">
-    <img 
-      src={img(PHOTOS.hero, 768, 600)} 
-      alt="Precision CNC manufacturing" 
-      className="w-full h-full object-cover" 
-      style={{ opacity: 0.15 }}
-      loading="eager"
-    />
-    <div 
-      className="absolute inset-0" 
-      style={{ 
-        background: `linear-gradient(160deg, ${NAVY} 30%, rgba(13,44,84,0.8) 70%, ${NAVY} 100%)` 
-      }} 
-    />
-  </div>
-
-  {/* Pattern - hidden on mobile */}
-  <div 
-    className="absolute inset-0 pointer-events-none hidden sm:block" 
-    style={{ 
-      backgroundImage: `repeating-linear-gradient(45deg, rgba(232,153,31,0.04) 0px, rgba(232,153,31,0.04) 1px, transparent 1px, transparent 44px)` 
-    }} 
-  />
-
-  {/* Main Content - Compact height on mobile */}
-  <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-8 sm:py-20 md:py-32 w-full">
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }} 
-      animate={{ opacity: 1, y: 0 }} 
-      transition={{ duration: 0.7, ease: "easeOut" }}
-    >
-      {/* Brand Label - Smaller on mobile */}
-      <div className="flex items-center gap-2 mb-2 sm:mb-5 md:mb-7">
-        <div className="h-px w-6 sm:w-14" style={{ backgroundColor: ORANGE }} />
-        <span 
-          className="text-[8px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-widest" 
-          style={{ color: ORANGE }}
-        >
-          Maderu Engineering
-        </span>
-      </div>
-
-      {/* Headline - Compact on mobile */}
-      <h1 
-        className="text-[1.8rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[1.05] sm:leading-none mb-2 sm:mb-5 md:mb-6 max-w-3xl lg:max-w-4xl" 
-        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      {/* Hero Section */}
+      <section 
+        className="relative overflow-hidden" 
+        style={{ backgroundColor: NAVY }}
       >
-        Precision
-        <br />
-        <span style={{ color: ORANGE }}>Engineering.</span>
-        <br />
-        <span className="text-[1.2rem] sm:text-inherit">Global Standards.</span>
-      </h1>
-
-      {/* Description - Shorter on mobile */}
-      <p className="text-white/60 text-[0.8rem] sm:text-lg max-w-sm sm:max-w-xl leading-relaxed mb-3 sm:mb-8 md:mb-10">
-        Manufacturing and Supplier of Pressed Products, Components, and Assemblies for Automotive, Aerospace, Telecommunication, and Electrical sectors.
-      </p>
-
-      {/* Buttons - Compact on mobile */}
-      <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4">
-        <button 
-          onClick={() => go("products")} 
-          className="flex items-center justify-center gap-1.5 px-4 sm:px-8 py-2.5 sm:py-4 text-[0.65rem] sm:text-sm font-bold uppercase tracking-wide text-white hover:opacity-90 active:scale-95 transition-all w-full sm:w-auto" 
-          style={{ backgroundColor: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
-        >
-          Explore Products <ArrowRight size={12} />
-        </button>
-        <button 
-          onClick={() => go("contact")} 
-          className="flex items-center justify-center gap-1.5 px-4 sm:px-8 py-2.5 sm:py-4 text-[0.65rem] sm:text-sm font-bold uppercase tracking-wide text-white/70 border border-white/20 hover:border-white hover:text-white transition-all w-full sm:w-auto" 
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
-        >
-          Request a Quote
-        </button>
-      </div>
-
-      {/* Compact Stats - Only on mobile */}
-      {/* <div className="mt-4 sm:mt-8 pt-3 sm:pt-6 border-t border-white/5 sm:hidden">
-        <div className="flex justify-around gap-2 text-center">
-          <div>
-            <div className="text-sm font-bold" style={{ color: ORANGE }}>25+</div>
-            <div className="text-[8px] text-white/40 uppercase tracking-wider">Years</div>
-          </div>
-          <div>
-            <div className="text-sm font-bold" style={{ color: ORANGE }}>500+</div>
-            <div className="text-[8px] text-white/40 uppercase tracking-wider">Clients</div>
-          </div>
-          <div>
-            <div className="text-sm font-bold" style={{ color: ORANGE }}>50+</div>
-            <div className="text-[8px] text-white/40 uppercase tracking-wider">Countries</div>
-          </div>
-        </div>
-      </div> */}
-    </motion.div>
-  </div>
-
-  {/* Scroll Indicator - Removed on mobile, kept for larger screens */}
-  <div className="absolute bottom-4 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 hidden sm:block">
-    <div className="w-px h-8 sm:h-12 md:h-14 bg-gradient-to-b from-white/20 to-transparent" />
-  </div>
-</section>
-
-    <section className="py-4 sm:py-6 md:py-7 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6">
-    {/* Mobile: 2x2 Grid | Tablet+: Flex row */}
-    <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-12">
-      {[
-        { icon: Shield, label: "ISO 9001:2015", sub: "Quality Management" },
-        { icon: Award, label: "IATF 16949:2016", sub: "Automotive Quality" },
-        { icon: CheckCircle, label: "Zero Defect Policy", sub: "Quality Commitment" },
-        { icon: Factory, label: "Bangalore, India", sub: "State-of-the-Art Facility" },
-      ].map(({ icon: Icon, label, sub }) => (
-        <div 
-          key={label} 
-          className="flex items-center gap-2 sm:gap-3"
-        >
-          <Icon 
-            size={18} 
-            className="sm:w-[22px] sm:h-[22px] md:w-[26px] md:h-[26px] flex-shrink-0" 
-            style={{ color: ORANGE }} 
+        {/* Background Image - Optimized for mobile */}
+        <div className="absolute inset-0">
+          <img 
+            src={img(PHOTOS.hero, 768, 600)} 
+            alt="Precision CNC manufacturing" 
+            className="w-full h-full object-cover" 
+            style={{ opacity: 0.15 }}
+            loading="eager"
           />
-          <div className="min-w-0">
-            <div 
-              className="text-[7px] sm:text-[9px] md:text-[10px] font-semibold uppercase tracking-widest truncate" 
-              style={{ color: `${NAVY}66` }}
-            >
-              {sub}
+          <div 
+            className="absolute inset-0" 
+            style={{ 
+              background: `linear-gradient(160deg, ${NAVY} 30%, rgba(13,44,84,0.8) 70%, ${NAVY} 100%)` 
+            }} 
+          />
+        </div>
+
+        {/* Pattern - hidden on mobile */}
+        <div 
+          className="absolute inset-0 pointer-events-none hidden sm:block" 
+          style={{ 
+            backgroundImage: `repeating-linear-gradient(45deg, rgba(232,153,31,0.04) 0px, rgba(232,153,31,0.04) 1px, transparent 1px, transparent 44px)` 
+          }} 
+        />
+
+        {/* Main Content - Compact height on mobile */}
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-8 sm:py-20 md:py-32 w-full">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            {/* Brand Label - Smaller on mobile */}
+            <div className="flex items-center gap-2 mb-2 sm:mb-5 md:mb-7">
+              <div className="h-px w-6 sm:w-14" style={{ backgroundColor: ORANGE }} />
+              <span 
+                className="text-[8px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-widest" 
+                style={{ color: ORANGE }}
+              >
+                Maderu Engineering
+              </span>
             </div>
-            <div 
-              className="font-black text-[10px] sm:text-sm leading-tight truncate" 
-              style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
+
+            {/* Headline - Compact on mobile */}
+            <h1 
+              className="text-[1.8rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[1.05] sm:leading-none mb-2 sm:mb-5 md:mb-6 max-w-3xl lg:max-w-4xl" 
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              {label}
+              Precision
+              <br />
+              <span style={{ color: ORANGE }}>Engineering.</span>
+              <br />
+              <span className="text-[1.2rem] sm:text-inherit">Global Standards.</span>
+            </h1>
+
+            {/* Description - Shorter on mobile */}
+            <p className="text-white/60 text-[0.8rem] sm:text-lg max-w-sm sm:max-w-xl leading-relaxed mb-3 sm:mb-8 md:mb-10">
+              Manufacturing and Supplier of Pressed Products, Components, and Assemblies for Automotive, Aerospace, Telecommunication, and Electrical sectors.
+            </p>
+
+            {/* Buttons - Compact on mobile */}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4">
+              <button 
+                onClick={() => go("products")} 
+                className="flex items-center justify-center gap-1.5 px-4 sm:px-8 py-2.5 sm:py-4 text-[0.65rem] sm:text-sm font-bold uppercase tracking-wide text-white hover:opacity-90 active:scale-95 transition-all w-full sm:w-auto" 
+                style={{ backgroundColor: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
+              >
+                Explore Products <ArrowRight size={12} />
+              </button>
+              <button 
+                onClick={() => go("contact")} 
+                className="flex items-center justify-center gap-1.5 px-4 sm:px-8 py-2.5 sm:py-4 text-[0.65rem] sm:text-sm font-bold uppercase tracking-wide text-white/70 border border-white/20 hover:border-white hover:text-white transition-all w-full sm:w-auto" 
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
+              >
+                Request a Quote
+              </button>
             </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator - Removed on mobile, kept for larger screens */}
+        <div className="absolute bottom-4 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 hidden sm:block">
+          <div className="w-px h-8 sm:h-12 md:h-14 bg-gradient-to-b from-white/20 to-transparent" />
+        </div>
+      </section>
+
+      {/* Trust Bar */}
+      <section className="py-4 sm:py-6 md:py-7 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-12">
+            {[
+              { icon: Shield, label: "ISO 9001:2015", sub: "Quality Management" },
+              { icon: Award, label: "IATF 16949:2016", sub: "Automotive Quality" },
+              { icon: CheckCircle, label: "Zero Defect Policy", sub: "Quality Commitment" },
+              { icon: Factory, label: "Bangalore, India", sub: "State-of-the-Art Facility" },
+            ].map(({ icon: Icon, label, sub }) => (
+              <div 
+                key={label} 
+                className="flex items-center gap-2 sm:gap-3"
+              >
+                <Icon 
+                  size={18} 
+                  className="sm:w-[22px] sm:h-[22px] md:w-[26px] md:h-[26px] flex-shrink-0" 
+                  style={{ color: ORANGE }} 
+                />
+                <div className="min-w-0">
+                  <div 
+                    className="text-[7px] sm:text-[9px] md:text-[10px] font-semibold uppercase tracking-widest truncate" 
+                    style={{ color: `${NAVY}66` }}
+                  >
+                    {sub}
+                  </div>
+                  <div 
+                    className="font-black text-[10px] sm:text-sm leading-tight truncate" 
+                    style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
+                  >
+                    {label}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
+      {/* Vision Section */}
       <section className="py-16 sm:py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center">
           <div>
@@ -481,6 +486,7 @@ return (
         </div>
       </section>
 
+      {/* Stats Section */}
       <section style={{ backgroundColor: NAVY }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-y sm:divide-y-0 divide-white/10">
@@ -491,6 +497,82 @@ return (
         </div>
       </section>
 
+      {/* Featured Products Section */}
+      <section className="py-16 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: "#FFFFFF" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 sm:mb-12 md:mb-14">
+            <div>
+              <SectionLabel>Featured Products</SectionLabel>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+                Our <span style={{ color: ORANGE }}>Premium</span> Range
+              </h2>
+              <p className="text-foreground/60 text-sm mt-2 max-w-xl">
+                Explore our most popular precision-engineered components across industries
+              </p>
+            </div>
+            <button 
+              onClick={() => go("products")}
+              className="mt-4 sm:mt-0 flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wide transition-colors flex-shrink-0"
+              style={{ color: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
+            >
+              View All Products <ArrowRight size={14} />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+            {featuredProducts.map((product) => (
+              <div 
+                key={product.id} 
+                className="bg-white overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer border border-border/50"
+                style={{ borderTop: `3px solid ${ORANGE}` }}
+                onClick={() => goToProduct(product.categoryId, product.id)}
+              >
+                <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
+                  <img 
+                    src={img(product.photo, 400, 250)} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                  />
+                </div>
+                <div className="p-4 sm:p-5">
+                  <div className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: ORANGE }}>
+                    {product.category}
+                  </div>
+                  <h3 className="font-black text-sm sm:text-base mb-1 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+                    {product.name}
+                  </h3>
+                  <p className="text-xs text-foreground/60 leading-relaxed line-clamp-2 mb-3">
+                    {product.desc}
+                  </p>
+                  <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                    <div>
+                      <div className="text-[8px] uppercase tracking-widest font-semibold text-muted-foreground">Price</div>
+                      <div className="font-black text-xs" style={{ color: ORANGE }}>{product.price}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[8px] uppercase tracking-widest font-semibold text-muted-foreground">MOQ</div>
+                      <div className="font-bold text-xs" style={{ color: NAVY }}>{product.moq}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick View All Button - Mobile Optimized */}
+          <div className="mt-8 text-center sm:hidden">
+            <button 
+              onClick={() => go("products")}
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-xs font-bold uppercase tracking-wide text-white w-full sm:w-auto"
+              style={{ backgroundColor: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
+            >
+              Browse All Products <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Industries Served Section */}
       <section className="py-16 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: "#F4F6F9" }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10 sm:mb-12 md:mb-14">
@@ -516,33 +598,31 @@ return (
         </div>
       </section>
 
-{/* Responsive Map Container */}
-<div className="w-full relative overflow-hidden">
-  {/* Mobile: Taller height | Desktop: Original aspect ratio */}
-  <div className="block sm:hidden" style={{ paddingBottom: '56.25%' }}>
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
-      className="absolute top-0 left-0 w-full h-full border-0"
-      loading="lazy"
-      allowFullScreen
-      referrerPolicy="no-referrer-when-downgrade"
-      title="Maderu Engineering Location"
-    />
-  </div>
-  
-  {/* Desktop: Original slim height */}
-  <div className="hidden sm:block" style={{ paddingBottom: '25.25%' }}>
-    <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
-      className="absolute top-0 left-0 w-full h-full border-0"
-      loading="lazy"
-      allowFullScreen
-      referrerPolicy="no-referrer-when-downgrade"
-      title="Maderu Engineering Location"
-    />
-  </div>
-</div>
+      {/* Map Section */}
+      <div className="w-full relative overflow-hidden">
+        <div className="block sm:hidden" style={{ paddingBottom: '56.25%' }}>
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
+            className="absolute top-0 left-0 w-full h-full border-0"
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Maderu Engineering Location"
+          />
+        </div>
+        <div className="hidden sm:block" style={{ paddingBottom: '25.25%' }}>
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
+            className="absolute top-0 left-0 w-full h-full border-0"
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Maderu Engineering Location"
+          />
+        </div>
+      </div>
 
+      {/* CTA Section */}
       <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6" style={{ backgroundColor: ORANGE }}>
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5 md:gap-6">
           <div>
@@ -1065,6 +1145,7 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
   const [selectedCat, setSelectedCat] = useState<CategoryData | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [whatsAppData, setWhatsAppData] = useState({
     userName: "",
     phone: "",
@@ -1074,11 +1155,128 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
   });
 
   const isInitial = useRef(true);
+  const isNavigating = useRef(false);
+
+  // ── URL-based navigation ──────────────────────────────────────────────────
+  const loadFromUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    const categoryId = params.get('category');
+    const productId = params.get('product');
+
+    console.log('Loading from URL:', categoryId, productId);
+
+    if (categoryId && productId) {
+      const cat = CATEGORY_DATA.find(c => c.id === categoryId);
+      if (cat) {
+        const product = cat.products.find(p => p.id === productId);
+        if (product) {
+          setSelectedCat(cat);
+          setSelectedProduct(product);
+          setIsLoading(false);
+          return true;
+        }
+      }
+    }
+
+    if (categoryId) {
+      const cat = CATEGORY_DATA.find(c => c.id === categoryId);
+      if (cat) {
+        setSelectedCat(cat);
+        setSelectedProduct(null);
+        setIsLoading(false);
+        return true;
+      }
+    }
+
+    setSelectedCat(null);
+    setSelectedProduct(null);
+    setIsLoading(false);
+    return false;
+  };
+
+  // Load on mount
   useEffect(() => {
-    if (isInitial.current) { isInitial.current = false; return; }
+    loadFromUrl();
+  }, []);
+
+  // Listen for popstate (browser back/forward)
+  useEffect(() => {
+    const handlePopState = () => {
+      loadFromUrl();
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Update URL and scroll when state changes
+  useEffect(() => {
+    if (isInitial.current) {
+      isInitial.current = false;
+      return;
+    }
+    
     window.scrollTo({ top: 0, behavior: "smooth" });
+    updateUrl();
   }, [selectedCat, selectedProduct]);
 
+  const updateUrl = () => {
+    const params = new URLSearchParams();
+    if (selectedCat) {
+      params.set('category', selectedCat.id);
+    }
+    if (selectedProduct) {
+      params.set('product', selectedProduct.id);
+    }
+    
+    const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+    window.history.pushState({}, '', newUrl);
+  };
+
+  // ── Navigation functions ──────────────────────────────────────────────────
+  const navigateToCategory = (cat: CategoryData) => {
+    setSelectedCat(cat);
+    setSelectedProduct(null);
+  };
+
+  const navigateToProduct = (product: ProductItem, cat: CategoryData) => {
+    setSelectedCat(cat);
+    setSelectedProduct(product);
+  };
+
+  const navigateToProducts = () => {
+    setSelectedCat(null);
+    setSelectedProduct(null);
+    window.history.pushState({}, '', window.location.pathname);
+  };
+
+  // ── External navigation handler ──────────────────────────────────────────
+  // This handles navigation from HomePage
+  useEffect(() => {
+    const handleExternalNavigation = (event: PopStateEvent) => {
+      // Check if we have params
+      const params = new URLSearchParams(window.location.search);
+      const categoryId = params.get('category');
+      const productId = params.get('product');
+      
+      if (categoryId || productId) {
+        loadFromUrl();
+      }
+    };
+
+    // Listen for custom event from HomePage
+    window.addEventListener('productsNavigate', handleExternalNavigation);
+    return () => window.removeEventListener('productsNavigate', handleExternalNavigation);
+  }, []);
+
+  // ── Share Product via WhatsApp ──────────────────────────────────────────────
+  const shareProductOnWhatsApp = (product: ProductItem) => {
+    const shareMessage = `🔧 *${product.name}*\n\n📋 *Category:* ${selectedCat?.name || 'Product'}\n💰 *Price:* ${product.price}\n📦 *MOQ:* ${product.moq}\n🔩 *Material:* ${product.material}\n📏 *Thickness:* ${product.thickness}\n\n📝 *Description:* ${product.desc}\n\n🛠️ *Maderu Engineering Pvt. Ltd.*\n🔗 View more: https://maderu-website-frontend.vercel.app/products?category=${selectedCat?.id}&product=${product.id}\n\n📱 *Contact us:* +91${WHATSAPP_NUMBER}`;
+    
+    const url = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
+    window.open(url, '_blank');
+  };
+
+  // ── WhatsApp functions ──────────────────────────────────────────────────────
   const openWhatsApp = (product: ProductItem) => {
     setWhatsAppData({
       userName: "",
@@ -1104,14 +1302,6 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
     window.open(url, '_blank');
     setShowWhatsAppModal(false);
-  };
-
-  // ── Share Product via WhatsApp ──────────────────────────────────────────────
-  const shareProductOnWhatsApp = (product: ProductItem) => {
-    const shareMessage = `🔧 *${product.name}*\n\n📋 *Category:* ${selectedCat?.name || 'Product'}\n💰 *Price:* ${product.price}\n📦 *MOQ:* ${product.moq}\n🔩 *Material:* ${product.material}\n📏 *Thickness:* ${product.thickness}\n\n📝 *Description:* ${product.desc}\n\n🛠️ *Maderu Engineering Pvt. Ltd.*\n🔗 View more: https://maderu-website-frontend.vercel.app/products\n\n📱 *Contact us:* +91${WHATSAPP_NUMBER}`;
-    
-    const url = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
-    window.open(url, '_blank');
   };
 
   // ── WhatsApp Modal ──────────────────────────────────────────────────────────
@@ -1218,28 +1408,36 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
   // ── Product detail ──────────────────────────────────────────────────────────
-  if (selectedProduct) {
+  if (selectedProduct && selectedCat) {
     return (
       <div>
-        <div className="py-3 px-6 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
+        <div className="py-3 px-4 sm:px-6 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
           <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs">
-            <button onClick={() => { setSelectedProduct(null); setSelectedCat(null); }} className="text-muted-foreground hover:text-foreground transition-colors">Products</button>
+            <button onClick={navigateToProducts} className="text-muted-foreground hover:text-foreground transition-colors">Products</button>
             <ChevronRight size={11} className="text-muted-foreground" />
-            <button onClick={() => setSelectedProduct(null)} className="text-muted-foreground hover:text-foreground transition-colors">{selectedCat?.name}</button>
+            <button onClick={() => navigateToCategory(selectedCat)} className="text-muted-foreground hover:text-foreground transition-colors">{selectedCat.name}</button>
             <ChevronRight size={11} className="text-muted-foreground" />
             <span className="font-semibold" style={{ color: NAVY }}>{selectedProduct.name}</span>
           </div>
         </div>
 
-        <section className="py-14 px-6">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-start">
+        <section className="py-10 sm:py-14 px-4 sm:px-6">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 sm:gap-14 items-start">
             <div className="aspect-[4/3] overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
               <img src={img(selectedProduct.photo, 800, 600)} alt={selectedProduct.name} className="w-full h-full object-cover" />
             </div>
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: ORANGE }}>{selectedCat?.name}</div>
-              <h1 className="text-3xl md:text-4xl font-black mb-4 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>{selectedProduct.name}</h1>
+              <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: ORANGE }}>{selectedCat.name}</div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-4 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>{selectedProduct.name}</h1>
               <p className="text-foreground/65 leading-relaxed mb-7 text-sm">{selectedProduct.desc}</p>
 
               <div className="grid grid-cols-2 gap-3 mb-7">
@@ -1260,7 +1458,6 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
                 All prices are indicative. Final pricing depends on order quantity, material grade, and surface finish requirements.
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => openWhatsApp(selectedProduct)}
@@ -1291,12 +1488,12 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
         </section>
 
         {selectedCat && (
-          <section className="py-12 px-6 border-t border-border" style={{ backgroundColor: "#F4F6F9" }}>
+          <section className="py-12 px-4 sm:px-6 border-t border-border" style={{ backgroundColor: "#F4F6F9" }}>
             <div className="max-w-7xl mx-auto">
               <h2 className="text-xl font-black mb-8" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>More from {selectedCat.name}</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {selectedCat.products.filter(p => p.id !== selectedProduct.id).slice(0, 4).map(p => (
-                  <div key={p.id} className="bg-white overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedProduct(p)}>
+                  <div key={p.id} className="bg-white overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigateToProduct(p, selectedCat)}>
                     <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
                       <img src={img(p.photo, 300, 190)} alt={p.name} className="w-full h-full object-cover" />
                     </div>
@@ -1318,22 +1515,22 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
   if (selectedCat) {
     return (
       <div>
-        <div className="py-3 px-6 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
+        <div className="py-3 px-4 sm:px-6 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
           <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs">
-            <button onClick={() => setSelectedCat(null)} className="text-muted-foreground hover:text-foreground transition-colors">Products</button>
+            <button onClick={navigateToProducts} className="text-muted-foreground hover:text-foreground transition-colors">Products</button>
             <ChevronRight size={11} className="text-muted-foreground" />
             <span className="font-semibold" style={{ color: NAVY }}>{selectedCat.name}</span>
           </div>
         </div>
 
-        <section className="py-16 px-6" style={{ backgroundColor: NAVY }}>
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-12 items-start">
+        <section className="py-12 sm:py-16 px-4 sm:px-6" style={{ backgroundColor: NAVY }}>
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-8 sm:gap-12 items-start">
             <div className="lg:col-span-3">
               <SectionLabel>{selectedCat.tagline}</SectionLabel>
-              <h1 className="text-4xl md:text-5xl font-black text-white leading-tight mb-5" style={{ fontFamily: "'Montserrat', sans-serif" }}>{selectedCat.name}</h1>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-5" style={{ fontFamily: "'Montserrat', sans-serif" }}>{selectedCat.name}</h1>
               <p className="text-white/65 text-sm leading-relaxed mb-6">{selectedCat.description}</p>
               {selectedCat.specThickness !== "N/A" && (
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4">
                   <div className="px-4 py-3" style={{ backgroundColor: "rgba(255,255,255,0.07)" }}>
                     <div className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Thickness Range</div>
                     <div className="font-bold text-white text-sm">{selectedCat.specThickness}</div>
@@ -1359,20 +1556,20 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
           </div>
         </section>
 
-        <section className="py-14 px-6" style={{ backgroundColor: "#F4F6F9" }}>
+        <section className="py-12 sm:py-14 px-4 sm:px-6" style={{ backgroundColor: "#F4F6F9" }}>
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-2xl font-black mb-8" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+            <h2 className="text-xl sm:text-2xl font-black mb-8" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
               {selectedCat.products.length} Products in this Category
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
               {selectedCat.products.map(product => (
                 <div key={product.id} className="bg-white overflow-hidden group hover:shadow-xl transition-shadow duration-300 flex flex-col" style={{ borderTop: `3px solid ${ORANGE}` }}>
-                  <div className="aspect-video overflow-hidden cursor-pointer" style={{ backgroundColor: "#c8cdd8" }} onClick={() => setSelectedProduct(product)}>
+                  <div className="aspect-video overflow-hidden cursor-pointer" style={{ backgroundColor: "#c8cdd8" }} onClick={() => navigateToProduct(product, selectedCat)}>
                     <img src={img(product.photo, 400, 250)} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="font-black text-sm mb-2 leading-tight cursor-pointer hover:underline" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }} onClick={() => setSelectedProduct(product)}>
+                  <div className="p-4 sm:p-5 flex flex-col flex-1">
+                    <h3 className="font-black text-sm mb-2 leading-tight cursor-pointer hover:underline" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }} onClick={() => navigateToProduct(product, selectedCat)}>
                       {product.name}
                     </h3>
                     <p className="text-xs text-foreground/60 leading-relaxed mb-4 flex-1 line-clamp-3">{product.desc}</p>
@@ -1412,7 +1609,7 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
                         <Share2 size={13} />
                       </button>
                       <button
-                        onClick={() => setSelectedProduct(product)}
+                        onClick={() => navigateToProduct(product, selectedCat)}
                         className="px-3 py-2.5 border-2 transition-all hover:bg-primary hover:text-white hover:border-primary rounded"
                         style={{ borderColor: NAVY, color: NAVY }}
                         title="View Details"
@@ -1433,10 +1630,10 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
   // ── Category cards (main view) ──────────────────────────────────────────────
   return (
     <>
-      <section className="py-24 px-6" style={{ backgroundColor: NAVY }}>
+      <section className="py-16 sm:py-24 px-4 sm:px-6" style={{ backgroundColor: NAVY }}>
         <div className="max-w-7xl mx-auto">
           <SectionLabel>Our Capabilities</SectionLabel>
-          <h1 className="text-5xl md:text-6xl font-black text-white max-w-3xl leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white max-w-3xl leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Products &<br /><span style={{ color: ORANGE }}>Solutions</span>
           </h1>
           <p className="text-white/60 mt-4 max-w-xl text-sm leading-relaxed">
@@ -1445,20 +1642,20 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
         </div>
       </section>
 
-      <section className="py-14 px-6" style={{ backgroundColor: "#F4F6F9" }}>
+      <section className="py-12 sm:py-14 px-4 sm:px-6" style={{ backgroundColor: "#F4F6F9" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {CATEGORY_DATA.map((cat) => (
               <div
                 key={cat.id}
                 className="bg-white overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300"
                 style={{ borderTop: `3px solid ${ORANGE}` }}
-                onClick={() => setSelectedCat(cat)}
+                onClick={() => navigateToCategory(cat)}
               >
                 <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
                   <img src={img(cat.photo, 600, 375)} alt={cat.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <h3 className="font-black text-base mb-2 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>{cat.name}</h3>
                   <p className="text-xs text-foreground/60 leading-relaxed mb-5">{cat.description.slice(0, 130)}…</p>
                   <div className="flex items-center justify-between pt-3 border-t border-border">
