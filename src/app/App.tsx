@@ -303,14 +303,12 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
   const goToProduct = (categoryId: string, productId: string) => {
     setPage("products");
     window.scrollTo({ top: 0, behavior: "smooth" });
-    // Use setTimeout to ensure the products page is rendered before updating URL
     setTimeout(() => {
       const params = new URLSearchParams();
       params.set('category', categoryId);
       params.set('product', productId);
       const newUrl = `${window.location.pathname}?${params.toString()}`;
       window.history.pushState({}, '', newUrl);
-      // Dispatch a custom event to notify the ProductsPage
       window.dispatchEvent(new PopStateEvent('popstate'));
     }, 100);
   };
@@ -329,12 +327,11 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section - Compact */}
       <section 
         className="relative overflow-hidden" 
         style={{ backgroundColor: NAVY }}
       >
-        {/* Background Image - Optimized for mobile */}
         <div className="absolute inset-0">
           <img 
             src={img(PHOTOS.hero, 768, 600)} 
@@ -351,22 +348,18 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
           />
         </div>
 
-        {/* Pattern - hidden on mobile */}
-        <div 
-          className="absolute inset-0 pointer-events-none hidden sm:block" 
+        <div className="absolute inset-0 pointer-events-none hidden sm:block" 
           style={{ 
             backgroundImage: `repeating-linear-gradient(45deg, rgba(232,153,31,0.04) 0px, rgba(232,153,31,0.04) 1px, transparent 1px, transparent 44px)` 
           }} 
         />
 
-        {/* Main Content - Compact height on mobile */}
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-8 sm:py-20 md:py-32 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-6 sm:py-20 md:py-32 w-full">
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            {/* Brand Label - Smaller on mobile */}
             <div className="flex items-center gap-2 mb-2 sm:mb-5 md:mb-7">
               <div className="h-px w-6 sm:w-14" style={{ backgroundColor: ORANGE }} />
               <span 
@@ -377,7 +370,6 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
               </span>
             </div>
 
-            {/* Headline - Compact on mobile */}
             <h1 
               className="text-[1.8rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[1.05] sm:leading-none mb-2 sm:mb-5 md:mb-6 max-w-3xl lg:max-w-4xl" 
               style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -389,12 +381,10 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
               <span className="text-[1.2rem] sm:text-inherit">Global Standards.</span>
             </h1>
 
-            {/* Description - Shorter on mobile */}
             <p className="text-white/60 text-[0.8rem] sm:text-lg max-w-sm sm:max-w-xl leading-relaxed mb-3 sm:mb-8 md:mb-10">
               Manufacturing and Supplier of Pressed Products, Components, and Assemblies for Automotive, Aerospace, Telecommunication, and Electrical sectors.
             </p>
 
-            {/* Buttons - Compact on mobile */}
             <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4">
               <button 
                 onClick={() => go("products")} 
@@ -414,42 +404,28 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator - Removed on mobile, kept for larger screens */}
         <div className="absolute bottom-4 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 hidden sm:block">
           <div className="w-px h-8 sm:h-12 md:h-14 bg-gradient-to-b from-white/20 to-transparent" />
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <section className="py-4 sm:py-6 md:py-7 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
+      {/* Trust Bar - Compact */}
+      <section className="py-3 sm:py-6 md:py-7 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-12">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-2 sm:gap-6 md:gap-8 lg:gap-12">
             {[
               { icon: Shield, label: "ISO 9001:2015", sub: "Quality Management" },
               { icon: Award, label: "IATF 16949:2016", sub: "Automotive Quality" },
               { icon: CheckCircle, label: "Zero Defect Policy", sub: "Quality Commitment" },
               { icon: Factory, label: "Bangalore, India", sub: "State-of-the-Art Facility" },
             ].map(({ icon: Icon, label, sub }) => (
-              <div 
-                key={label} 
-                className="flex items-center gap-2 sm:gap-3"
-              >
-                <Icon 
-                  size={18} 
-                  className="sm:w-[22px] sm:h-[22px] md:w-[26px] md:h-[26px] flex-shrink-0" 
-                  style={{ color: ORANGE }} 
-                />
+              <div key={label} className="flex items-center gap-1.5 sm:gap-3">
+                <Icon size={14} className="sm:w-[22px] sm:h-[22px] md:w-[26px] md:h-[26px] flex-shrink-0" style={{ color: ORANGE }} />
                 <div className="min-w-0">
-                  <div 
-                    className="text-[7px] sm:text-[9px] md:text-[10px] font-semibold uppercase tracking-widest truncate" 
-                    style={{ color: `${NAVY}66` }}
-                  >
+                  <div className="text-[6px] sm:text-[9px] md:text-[10px] font-semibold uppercase tracking-widest truncate" style={{ color: `${NAVY}66` }}>
                     {sub}
                   </div>
-                  <div 
-                    className="font-black text-[10px] sm:text-sm leading-tight truncate" 
-                    style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
-                  >
+                  <div className="font-black text-[8px] sm:text-sm leading-tight truncate" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
                     {label}
                   </div>
                 </div>
@@ -459,34 +435,34 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
         </div>
       </section>
 
-      {/* Vision Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center">
+      {/* Vision Section - Compact */}
+      <section className="py-12 sm:py-20 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           <div>
             <SectionLabel>Our Vision</SectionLabel>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-4 sm:mb-6 md:mb-8" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black leading-tight mb-3 sm:mb-6 md:mb-8" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
               Built on <span style={{ color: ORANGE }}>Quality,</span><br />Driven by Precision
             </h2>
-            <blockquote className="text-sm sm:text-base text-foreground/65 leading-relaxed border-l-4 pl-4 sm:pl-5 md:pl-6 italic" style={{ borderColor: ORANGE }}>
+            <blockquote className="text-xs sm:text-base text-foreground/65 leading-relaxed border-l-4 pl-3 sm:pl-5 md:pl-6 italic" style={{ borderColor: ORANGE }}>
               "Maderu Engineering Private Limited provides timely Delivery of products with Quality to meet our customer requirements, whose performance and appearance are in accordance with our best practices of high manufacturing standards."
             </blockquote>
-            <button onClick={() => go("about")} className="mt-6 sm:mt-7 md:mt-8 flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wide transition-colors" style={{ color: ORANGE, fontFamily: "'Montserrat', sans-serif" }}>
+            <button onClick={() => go("about")} className="mt-4 sm:mt-7 md:mt-8 flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wide transition-colors" style={{ color: ORANGE, fontFamily: "'Montserrat', sans-serif" }}>
               Learn About Us <ArrowRight size={14} />
             </button>
           </div>
-          <div className="relative mt-6 sm:mt-0">
+          <div className="relative mt-4 sm:mt-0">
             <div className="aspect-[4/3] overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
               <img src={img(PHOTOS.press, 800, 600)} alt="Manufacturing facility" className="w-full h-full object-cover" />
             </div>
-            <div className="absolute -bottom-3 sm:-bottom-4 md:-bottom-5 -right-3 sm:-right-4 md:-right-5 w-28 sm:w-32 md:w-36 h-28 sm:h-32 md:h-36 flex flex-col items-center justify-center text-white" style={{ backgroundColor: ORANGE }}>
-              <div className="text-3xl sm:text-4xl font-black leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>25+</div>
-              <div className="text-[7px] sm:text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-center leading-snug mt-1 sm:mt-1.5">Years of<br />Excellence</div>
+            <div className="absolute -bottom-3 sm:-bottom-4 md:-bottom-5 -right-3 sm:-right-4 md:-right-5 w-20 sm:w-32 md:w-36 h-20 sm:h-32 md:h-36 flex flex-col items-center justify-center text-white" style={{ backgroundColor: ORANGE }}>
+              <div className="text-2xl sm:text-4xl font-black leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>25+</div>
+              <div className="text-[6px] sm:text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-center leading-snug mt-0.5 sm:mt-1.5">Years of<br />Excellence</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section - Compact */}
       <section style={{ backgroundColor: NAVY }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-y sm:divide-y-0 divide-white/10">
@@ -497,103 +473,110 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: "#FFFFFF" }}>
+      {/* Featured Products Section - Horizontal Scroll on Mobile */}
+      <section className="py-12 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: "#FFFFFF" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 sm:mb-12 md:mb-14">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-12 md:mb-14">
             <div>
               <SectionLabel>Featured Products</SectionLabel>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
                 Our <span style={{ color: ORANGE }}>Premium</span> Range
               </h2>
-              <p className="text-foreground/60 text-sm mt-2 max-w-xl">
-                Explore our most popular precision-engineered components across industries
+              <p className="text-foreground/60 text-xs sm:text-sm mt-1 sm:mt-2 max-w-xl">
+                Explore our most popular precision-engineered components
               </p>
             </div>
             <button 
               onClick={() => go("products")}
-              className="mt-4 sm:mt-0 flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wide transition-colors flex-shrink-0"
+              className="mt-3 sm:mt-0 flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wide transition-colors flex-shrink-0"
               style={{ color: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
             >
-              View All Products <ArrowRight size={14} />
+              View All <ArrowRight size={14} />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-            {featuredProducts.map((product) => (
-              <div 
-                key={product.id} 
-                className="bg-white overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer border border-border/50"
-                style={{ borderTop: `3px solid ${ORANGE}` }}
-                onClick={() => goToProduct(product.categoryId, product.id)}
-              >
-                <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
-                  <img 
-                    src={img(product.photo, 400, 250)} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                  />
-                </div>
-                <div className="p-4 sm:p-5">
-                  <div className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: ORANGE }}>
-                    {product.category}
+          {/* Mobile: Horizontal Scroll | Desktop: Grid */}
+          <div className="overflow-x-auto pb-4 sm:pb-0 -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-hide">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 md:gap-6" style={{ width: 'max-content', minWidth: '100%' }}>
+              {featuredProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="bg-white overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer border border-border/50 flex-shrink-0 sm:flex-shrink-0"
+                  style={{ borderTop: `3px solid ${ORANGE}`, width: '260px', maxWidth: '85vw', minWidth: '240px' }}
+                  onClick={() => goToProduct(product.categoryId, product.id)}
+                >
+                  <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
+                    <img 
+                      src={img(product.photo, 400, 250)} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                    />
                   </div>
-                  <h3 className="font-black text-sm sm:text-base mb-1 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
-                    {product.name}
-                  </h3>
-                  <p className="text-xs text-foreground/60 leading-relaxed line-clamp-2 mb-3">
-                    {product.desc}
-                  </p>
-                  <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                    <div>
-                      <div className="text-[8px] uppercase tracking-widest font-semibold text-muted-foreground">Price</div>
-                      <div className="font-black text-xs" style={{ color: ORANGE }}>{product.price}</div>
+                  <div className="p-3 sm:p-5">
+                    <div className="text-[7px] sm:text-[9px] font-bold uppercase tracking-widest mb-0.5 sm:mb-1" style={{ color: ORANGE }}>
+                      {product.category}
                     </div>
-                    <div className="text-right">
-                      <div className="text-[8px] uppercase tracking-widest font-semibold text-muted-foreground">MOQ</div>
-                      <div className="font-bold text-xs" style={{ color: NAVY }}>{product.moq}</div>
+                    <h3 className="font-black text-xs sm:text-base mb-0.5 sm:mb-1 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+                      {product.name.length > 30 ? product.name.slice(0, 30) + '...' : product.name}
+                    </h3>
+                    <p className="text-[10px] sm:text-xs text-foreground/60 leading-relaxed line-clamp-2 mb-2 sm:mb-3">
+                      {product.desc}
+                    </p>
+                    <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-border/50">
+                      <div>
+                        <div className="text-[7px] sm:text-[8px] uppercase tracking-widest font-semibold text-muted-foreground">Price</div>
+                        <div className="font-black text-[10px] sm:text-xs" style={{ color: ORANGE }}>{product.price}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[7px] sm:text-[8px] uppercase tracking-widest font-semibold text-muted-foreground">MOQ</div>
+                        <div className="font-bold text-[10px] sm:text-xs" style={{ color: NAVY }}>{product.moq}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Quick View All Button - Mobile Optimized */}
-          <div className="mt-8 text-center sm:hidden">
+          {/* Quick View All Button - Mobile */}
+          <div className="mt-4 text-center sm:hidden">
             <button 
               onClick={() => go("products")}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-xs font-bold uppercase tracking-wide text-white w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-[10px] font-bold uppercase tracking-wide text-white w-full"
               style={{ backgroundColor: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
             >
-              Browse All Products <ArrowRight size={14} />
+              Browse All Products <ArrowRight size={12} />
             </button>
           </div>
         </div>
       </section>
 
-      {/* Industries Served Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: "#F4F6F9" }}>
+      {/* Industries Served Section - Horizontal Scroll on Mobile */}
+      <section className="py-12 sm:py-20 px-4 sm:px-6" style={{ backgroundColor: "#F4F6F9" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10 sm:mb-12 md:mb-14">
+          <div className="text-center mb-6 sm:mb-12 md:mb-14">
             <SectionLabel>Industries Served</SectionLabel>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>Core Industry Sectors</h2>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>Core Industry Sectors</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-            {sectors.map(({ icon: Icon, title, desc, photo }) => (
-              <div key={title} className="group bg-white overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300" style={{ borderTop: `3px solid ${ORANGE}` }} onClick={() => go("applications")}>
-                <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
-                  <img src={img(photo, 400, 250)} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <div className="p-4 sm:p-5 md:p-6">
-                  <div className="w-8 sm:w-9 md:w-10 h-8 sm:h-9 md:h-10 flex items-center justify-center mb-3 sm:mb-3.5 md:mb-4 rounded-sm" style={{ backgroundColor: `${ORANGE}18` }}>
-                    <Icon size={16} className="sm:w-[18px] sm:h-[18px] md:w-[20px] md:h-[20px]" style={{ color: ORANGE }} />
+          
+          {/* Mobile: Horizontal Scroll | Desktop: Grid */}
+          <div className="overflow-x-auto pb-4 sm:pb-0 -mx-4 sm:mx-0 px-4 sm:px-0 scrollbar-hide">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 md:gap-6" style={{ width: 'max-content', minWidth: '100%' }}>
+              {sectors.map(({ icon: Icon, title, desc, photo }) => (
+                <div key={title} className="group bg-white overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 flex-shrink-0 sm:flex-shrink-0" style={{ borderTop: `3px solid ${ORANGE}`, width: '260px', maxWidth: '85vw', minWidth: '220px' }} onClick={() => go("applications")}>
+                  <div className="aspect-video overflow-hidden" style={{ backgroundColor: "#c8cdd8" }}>
+                    <img src={img(photo, 400, 250)} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
-                  <h3 className="font-black text-sm sm:text-base mb-1.5 sm:mb-2 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>{title}</h3>
-                  <p className="text-xs sm:text-sm text-foreground/60 leading-relaxed">{desc}</p>
+                  <div className="p-3 sm:p-5 md:p-6">
+                    <div className="w-7 sm:w-9 md:w-10 h-7 sm:h-9 md:h-10 flex items-center justify-center mb-2 sm:mb-3.5 md:mb-4 rounded-sm" style={{ backgroundColor: `${ORANGE}18` }}>
+                      <Icon size={14} className="sm:w-[18px] sm:h-[18px] md:w-[20px] md:h-[20px]" style={{ color: ORANGE }} />
+                    </div>
+                    <h3 className="font-black text-xs sm:text-base mb-0.5 sm:mb-1.5 leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>{title}</h3>
+                    <p className="text-[10px] sm:text-sm text-foreground/60 leading-relaxed line-clamp-2">{desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -622,18 +605,29 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
         </div>
       </div>
 
-      {/* CTA Section */}
-      <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6" style={{ backgroundColor: ORANGE }}>
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5 md:gap-6">
+      {/* CTA Section - Compact */}
+      <section className="py-8 sm:py-14 md:py-16 px-4 sm:px-6" style={{ backgroundColor: ORANGE }}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-5 md:gap-6">
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight text-center sm:text-left" style={{ fontFamily: "'Montserrat', sans-serif" }}>Ready to start your next precision project?</h2>
-            <p className="text-white/80 mt-1 sm:mt-2 text-xs sm:text-sm text-center sm:text-left">Send us your blueprint — we respond within 24 business hours.</p>
+            <h2 className="text-base sm:text-2xl md:text-3xl font-black text-white leading-tight text-center sm:text-left" style={{ fontFamily: "'Montserrat', sans-serif" }}>Ready to start your next precision project?</h2>
+            <p className="text-white/80 mt-0.5 sm:mt-2 text-[10px] sm:text-sm text-center sm:text-left">Send us your blueprint — we respond within 24 business hours.</p>
           </div>
-          <button onClick={() => go("contact")} className="flex-shrink-0 flex items-center justify-center gap-2 px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 font-bold uppercase tracking-wide text-xs sm:text-sm bg-white hover:bg-white/90 transition-colors w-full sm:w-auto" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
-            Get a Quote <ArrowRight size={15} />
+          <button onClick={() => go("contact")} className="flex-shrink-0 flex items-center justify-center gap-2 px-5 sm:px-7 md:px-8 py-2.5 sm:py-3.5 md:py-4 font-bold uppercase tracking-wide text-[10px] sm:text-sm bg-white hover:bg-white/90 transition-colors w-full sm:w-auto" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>
+            Get a Quote <ArrowRight size={13} />
           </button>
         </div>
       </section>
+
+      {/* Scrollbar Hide CSS */}
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </>
   );
 }
