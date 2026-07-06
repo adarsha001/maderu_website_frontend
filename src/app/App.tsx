@@ -308,59 +308,152 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
 
 return (
     <>
-      <section className="relative min-h-screen flex items-center overflow-hidden" style={{ backgroundColor: NAVY }}>
-        <div className="absolute inset-0">
-          <img src={img(PHOTOS.hero, 1920, 1080)} alt="Precision CNC manufacturing" className="w-full h-full object-cover" style={{ opacity: 0.18 }} />
-          <div className="absolute inset-0" style={{ background: `linear-gradient(120deg, ${NAVY} 55%, rgba(13,44,84,0.6) 100%)` }} />
-        </div>
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: `repeating-linear-gradient(45deg, rgba(232,153,31,0.04) 0px, rgba(232,153,31,0.04) 1px, transparent 1px, transparent 44px)` }} />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-24 md:py-32 w-full">
-          <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.85, ease: "easeOut" }}>
-            <div className="flex items-center gap-3 mb-4 sm:mb-5 md:mb-7">
-              <div className="h-px w-10 sm:w-14" style={{ backgroundColor: ORANGE }} />
-              <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest" style={{ color: ORANGE }}>Maderu Engineering Pvt. Ltd.</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[1.1] sm:leading-none mb-4 sm:mb-5 md:mb-6 max-w-3xl lg:max-w-4xl" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              Precision<br /><span style={{ color: ORANGE }}>Engineering.</span><br />Global Standards.
-            </h1>
-            <p className="text-white/65 text-base sm:text-lg max-w-xl leading-relaxed mb-6 sm:mb-8 md:mb-10">
-              Manufacturing and Supplier of Pressed Products, Components, and Assemblies for Automotive, Aerospace, Telecommunication, and Electrical sectors.
-            </p>
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-              <button onClick={() => go("products")} className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wide text-white hover:opacity-90 active:scale-95 transition-all" style={{ backgroundColor: ORANGE, fontFamily: "'Montserrat', sans-serif" }}>
-                Explore Products <ArrowRight size={15} />
-              </button>
-              <button onClick={() => go("contact")} className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wide text-white/80 border border-white/25 hover:border-white hover:text-white transition-all" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                Request a Quote
-              </button>
-            </div>
-          </motion.div>
-        </div>
-        <div className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2">
-          <div className="w-px h-10 sm:h-12 md:h-14 bg-gradient-to-b from-white/30 to-transparent" />
-        </div>
-      </section>
+ <section 
+  className="relative overflow-hidden" 
+  style={{ backgroundColor: NAVY }}
+>
+  {/* Background Image - Optimized for mobile */}
+  <div className="absolute inset-0">
+    <img 
+      src={img(PHOTOS.hero, 768, 600)} 
+      alt="Precision CNC manufacturing" 
+      className="w-full h-full object-cover" 
+      style={{ opacity: 0.15 }}
+      loading="eager"
+    />
+    <div 
+      className="absolute inset-0" 
+      style={{ 
+        background: `linear-gradient(160deg, ${NAVY} 30%, rgba(13,44,84,0.8) 70%, ${NAVY} 100%)` 
+      }} 
+    />
+  </div>
 
-      <section className="py-5 sm:py-6 md:py-7 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16">
-            {[
-              { icon: Shield, label: "ISO 9001:2015", sub: "Quality Management" },
-              { icon: Award, label: "IATF 16949:2016", sub: "Automotive Quality" },
-              { icon: CheckCircle, label: "Zero Defect Policy", sub: "Quality Commitment" },
-              { icon: Factory, label: "Bangalore, India", sub: "State-of-the-Art Facility" },
-            ].map(({ icon: Icon, label, sub }) => (
-              <div key={label} className="flex items-center gap-2 sm:gap-3">
-                <Icon size={20} className="sm:w-[22px] sm:h-[22px] md:w-[26px] md:h-[26px]" style={{ color: ORANGE }} />
-                <div>
-                  <div className="text-[8px] sm:text-[9px] md:text-[10px] font-semibold uppercase tracking-widest" style={{ color: `${NAVY}66` }}>{sub}</div>
-                  <div className="font-black text-xs sm:text-sm leading-tight" style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}>{label}</div>
-                </div>
-              </div>
-            ))}
+  {/* Pattern - hidden on mobile */}
+  <div 
+    className="absolute inset-0 pointer-events-none hidden sm:block" 
+    style={{ 
+      backgroundImage: `repeating-linear-gradient(45deg, rgba(232,153,31,0.04) 0px, rgba(232,153,31,0.04) 1px, transparent 1px, transparent 44px)` 
+    }} 
+  />
+
+  {/* Main Content - Compact height on mobile */}
+  <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-8 sm:py-20 md:py-32 w-full">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      {/* Brand Label - Smaller on mobile */}
+      <div className="flex items-center gap-2 mb-2 sm:mb-5 md:mb-7">
+        <div className="h-px w-6 sm:w-14" style={{ backgroundColor: ORANGE }} />
+        <span 
+          className="text-[8px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-widest" 
+          style={{ color: ORANGE }}
+        >
+          Maderu Engineering
+        </span>
+      </div>
+
+      {/* Headline - Compact on mobile */}
+      <h1 
+        className="text-[1.8rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-[1.05] sm:leading-none mb-2 sm:mb-5 md:mb-6 max-w-3xl lg:max-w-4xl" 
+        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      >
+        Precision
+        <br />
+        <span style={{ color: ORANGE }}>Engineering.</span>
+        <br />
+        <span className="text-[1.2rem] sm:text-inherit">Global Standards.</span>
+      </h1>
+
+      {/* Description - Shorter on mobile */}
+      <p className="text-white/60 text-[0.8rem] sm:text-lg max-w-sm sm:max-w-xl leading-relaxed mb-3 sm:mb-8 md:mb-10">
+        Manufacturing and Supplier of Pressed Products, Components, and Assemblies for Automotive, Aerospace, Telecommunication, and Electrical sectors.
+      </p>
+
+      {/* Buttons - Compact on mobile */}
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4">
+        <button 
+          onClick={() => go("products")} 
+          className="flex items-center justify-center gap-1.5 px-4 sm:px-8 py-2.5 sm:py-4 text-[0.65rem] sm:text-sm font-bold uppercase tracking-wide text-white hover:opacity-90 active:scale-95 transition-all w-full sm:w-auto" 
+          style={{ backgroundColor: ORANGE, fontFamily: "'Montserrat', sans-serif" }}
+        >
+          Explore Products <ArrowRight size={12} />
+        </button>
+        <button 
+          onClick={() => go("contact")} 
+          className="flex items-center justify-center gap-1.5 px-4 sm:px-8 py-2.5 sm:py-4 text-[0.65rem] sm:text-sm font-bold uppercase tracking-wide text-white/70 border border-white/20 hover:border-white hover:text-white transition-all w-full sm:w-auto" 
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          Request a Quote
+        </button>
+      </div>
+
+      {/* Compact Stats - Only on mobile */}
+      {/* <div className="mt-4 sm:mt-8 pt-3 sm:pt-6 border-t border-white/5 sm:hidden">
+        <div className="flex justify-around gap-2 text-center">
+          <div>
+            <div className="text-sm font-bold" style={{ color: ORANGE }}>25+</div>
+            <div className="text-[8px] text-white/40 uppercase tracking-wider">Years</div>
+          </div>
+          <div>
+            <div className="text-sm font-bold" style={{ color: ORANGE }}>500+</div>
+            <div className="text-[8px] text-white/40 uppercase tracking-wider">Clients</div>
+          </div>
+          <div>
+            <div className="text-sm font-bold" style={{ color: ORANGE }}>50+</div>
+            <div className="text-[8px] text-white/40 uppercase tracking-wider">Countries</div>
           </div>
         </div>
-      </section>
+      </div> */}
+    </motion.div>
+  </div>
+
+  {/* Scroll Indicator - Removed on mobile, kept for larger screens */}
+  <div className="absolute bottom-4 sm:bottom-8 md:bottom-10 left-1/2 -translate-x-1/2 hidden sm:block">
+    <div className="w-px h-8 sm:h-12 md:h-14 bg-gradient-to-b from-white/20 to-transparent" />
+  </div>
+</section>
+
+    <section className="py-4 sm:py-6 md:py-7 border-b border-border" style={{ backgroundColor: "#F4F6F9" }}>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    {/* Mobile: 2x2 Grid | Tablet+: Flex row */}
+    <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-12">
+      {[
+        { icon: Shield, label: "ISO 9001:2015", sub: "Quality Management" },
+        { icon: Award, label: "IATF 16949:2016", sub: "Automotive Quality" },
+        { icon: CheckCircle, label: "Zero Defect Policy", sub: "Quality Commitment" },
+        { icon: Factory, label: "Bangalore, India", sub: "State-of-the-Art Facility" },
+      ].map(({ icon: Icon, label, sub }) => (
+        <div 
+          key={label} 
+          className="flex items-center gap-2 sm:gap-3"
+        >
+          <Icon 
+            size={18} 
+            className="sm:w-[22px] sm:h-[22px] md:w-[26px] md:h-[26px] flex-shrink-0" 
+            style={{ color: ORANGE }} 
+          />
+          <div className="min-w-0">
+            <div 
+              className="text-[7px] sm:text-[9px] md:text-[10px] font-semibold uppercase tracking-widest truncate" 
+              style={{ color: `${NAVY}66` }}
+            >
+              {sub}
+            </div>
+            <div 
+              className="font-black text-[10px] sm:text-sm leading-tight truncate" 
+              style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {label}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
       <section className="py-16 sm:py-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-16 items-center">
@@ -424,15 +517,30 @@ return (
       </section>
 
 {/* Responsive Map Container */}
-<div className="w-full relative" style={{ paddingBottom: '25.25%', height: 0, overflow: 'hidden' }}>
-  <iframe 
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
-    className="absolute top-0 left-0 w-full h-full border-0"
-    loading="lazy"
-    allowFullScreen
-    referrerPolicy="no-referrer-when-downgrade"
-    title="Maderu Engineering Location"
-  />
+<div className="w-full relative overflow-hidden">
+  {/* Mobile: Taller height | Desktop: Original aspect ratio */}
+  <div className="block sm:hidden" style={{ paddingBottom: '56.25%' }}>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
+      className="absolute top-0 left-0 w-full h-full border-0"
+      loading="lazy"
+      allowFullScreen
+      referrerPolicy="no-referrer-when-downgrade"
+      title="Maderu Engineering Location"
+    />
+  </div>
+  
+  {/* Desktop: Original slim height */}
+  <div className="hidden sm:block" style={{ paddingBottom: '25.25%' }}>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3269.0915503707133!2d77.6955262110451!3d12.995696850945697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1115724474b7%3A0xb11a9c7b54f23561!2sMADERU%20ENGINEERING%20PVT%20LTD!5e0!3m2!1sen!2sin!4v1783344982681!5m2!1sen!2sin" 
+      className="absolute top-0 left-0 w-full h-full border-0"
+      loading="lazy"
+      allowFullScreen
+      referrerPolicy="no-referrer-when-downgrade"
+      title="Maderu Engineering Location"
+    />
+  </div>
 </div>
 
       <section className="py-12 sm:py-14 md:py-16 px-4 sm:px-6" style={{ backgroundColor: ORANGE }}>
@@ -927,7 +1035,7 @@ const CATEGORY_DATA: CategoryData[] = [
 // import type { CategoryData, ProductItem, Page } from "../../types";
 
 // WhatsApp number (without +)
-const WHATSAPP_NUMBER = "919916737708";
+const WHATSAPP_NUMBER = "919611372722";
 
 // Helper function to generate WhatsApp message
 const generateWhatsAppMessage = (product: ProductItem, userName: string, phone: string, quantity: string, address: string) => {
