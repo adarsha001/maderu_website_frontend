@@ -1000,7 +1000,7 @@ export function ProductsPage({ setPage }: { setPage: (p: Page) => void }) {
 
   // ── Share Product via WhatsApp ──────────────────────────────────────────────
   const shareProductOnWhatsApp = (product: ProductItem) => {
-    const shareMessage = `🔧 *${product.name}*\n\n📋 *Category:* ${selectedCat?.name || 'Product'}\n💰 *Price:* ${product.price}\n📦 *MOQ:* ${product.moq}\n🔩 *Material:* ${product.material}\n📏 *Thickness:* ${product.thickness}\n\n📝 *Description:* ${product.desc}\n\n🛠️ *Maderu Engineering Pvt. Ltd.*\n🔗 View more: https://maderuengineering.com/products\n\n📱 *Contact us:* +91${WHATSAPP_NUMBER}`;
+    const shareMessage = `🔧 *${product.name}*\n\n📋 *Category:* ${selectedCat?.name || 'Product'}\n💰 *Price:* ${product.price}\n📦 *MOQ:* ${product.moq}\n🔩 *Material:* ${product.material}\n📏 *Thickness:* ${product.thickness}\n\n📝 *Description:* ${product.desc}\n\n🛠️ *Maderu Engineering Pvt. Ltd.*\n🔗 View more: https://maderu-website-frontend.vercel.app/products\n\n📱 *Contact us:* +91${WHATSAPP_NUMBER}`;
     
     const url = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
     window.open(url, '_blank');
